@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Builder</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 800px;
+  display: flex;
+  gap: 20px;
+}
+
+.builder, .preview {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.field {
+  margin-bottom: 10px;
+}
+
+.field input, .field textarea {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.remove-btn {
+  background: red;
+  margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Builder Section -->
+  <div class="builder">
+    <h2>Form Builder</h2>
+
+    <button onclick="addField('text')">Add Text Field</button>
+    <button onclick="addField('email')">Add Email Field</button>
+    <button onclick="addField('textarea')">Add Textarea</button>
+
+    <div id="fields"></div>
+  </div>
+
+  <!-- Preview Section -->
+  <div class="preview">
+    <h2>Form Preview</h2>
+    <form id="previewForm"></form>
+  </div>
+
+</div>
+
+<script>
+function addField(type) {
+  const label = prompt("Enter field label:");
+  if (!label) return;
+
+  const fieldContainer = document.createElement("div");
+  fieldContainer.className = "field";
+
+  let fieldHTML = `<label>${label}</label>`;
+
+  if (type === "text" || type === "email") {
+    fieldHTML += `<input type="${type}" placeholder="${label}">`;
+  } else if (type === "textarea") {
+    fieldHTML += `<textarea placeholder="${label}"></textarea>`;
+  }
+
+  fieldHTML += `<button class="remove-btn" onclick="removeField(this)">Remove</button>`;
+
+  fieldContainer.innerHTML = fieldHTML;
+
+  document.getElementById("fields").appendChild(fieldContainer);
+
+  updatePreview();
+}
+
+function removeField(button) {
+  button.parentElement.remove();
+  updatePreview();
+}
+
+function updatePreview() {
+  const preview = document.getElementById("previewForm");
+  preview.innerHTML = "";
+
+  const fields = document.querySelectorAll("#fields .field");
+
+  fields.forEach(field => {
+    const clone = field.cloneNode(true);
+    const removeBtn = clone.querySelector(".remove-btn");
+    if (removeBtn) removeBtn.remove();
+    preview.appendChild(clone);
+  });
+}
+</script>
+
+</body>
+</html>
